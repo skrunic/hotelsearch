@@ -91,18 +91,22 @@ namespace Demo_HotelSearch.Controllers
 
 
         [HttpGet("search")]
-        public IActionResult SearchHotels(double latitude, double longitude, int page = 1, int pageSize = 10)
+        public IActionResult SearchHotels(string query, double latitude, double longitude, int page = 1, int pageSize = 10)
         {
-            var hotelsWithDistance = hotels.Select(h => new
-            {
-                Hotel = h,
-                Distance = GetDistance(latitude, longitude, h.Latitude, h.Longitude)
-            })
-            .OrderBy(h => h.Distance).ThenBy(h => h.Hotel.Price)
-            .Skip((page - 1) * pageSize).Take(pageSize).ToList();
+            var hotelsWithDistance = hotels
+                .Where(h => string.IsNullOrEmpty(query) || h.Name.Contains(query, StringComparison.OrdinalIgnoreCase)) // Filter by hotel name
+                .Select(h => new
+                {
+                    Hotel = h,
+                    Distance = GetDistance(latitude, longitude, h.Latitude, h.Longitude)
+                })
+                .OrderBy(h => h.Distance).ThenBy(h => h.Hotel.Price)
+                .Skip((page - 1) * pageSize).Take(pageSize)
+                .ToList();
 
             return Ok(hotelsWithDistance);
         }
+
 
         private double GetDistance(double lat1, double lon1, double lat2, double lon2)
         {
