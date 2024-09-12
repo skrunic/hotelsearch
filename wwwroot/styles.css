@@ -1,0 +1,40 @@
+﻿body {
+    background-color: #f8f9fa;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+.content-container {
+    text-align: left;
+    width: 100%;
+    max-width: 600px;
+    margin: auto;
+}
+
+.search-container {
+    margin-bottom: 30px;
+}
+
+.hotel-list {
+    width: 100%;
+    display: none; /* Initially hidden */
+    max-height: 300px; /* Set max-height for scrollable area */
+    overflow-y: auto; /* Enable vertical scrolling */
+    margin-top: 10px;
+}
+
+.hotel-item {
+    cursor: pointer;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+    .hotel-item:hover {
+        background-color: #e9f7ef;
+    }
