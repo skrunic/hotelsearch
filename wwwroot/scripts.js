@@ -36,34 +36,52 @@ function renderHotels(hotels) {
         return;
     }
 
-    hotels.forEach(hotel => {
+    hotels.forEach(h => {
         const hotelItem = document.createElement('div');
         hotelItem.classList.add('hotel-item');
         hotelItem.innerHTML = `
             <div class="d-flex justify-content-between align-items-center">
-                <span><i class="bi bi-house-fill"></i> ${hotel.name}</span>
-                <span><i class="bi bi-cash-stack"></i> Price: $${hotel.price}</span>
-                <span><i class="bi bi-geo-alt-fill"></i> Distance: ${hotel.latitude.toFixed(2)}°, ${hotel.longitude.toFixed(2)}°</span>
+                <span><i class="bi bi-house-fill"></i> ${h.hotel.name}</span>
+                <span><i class="bi bi-cash-stack"></i> Price: $${h.hotel.price}</span>
+                <span><i class="bi bi-geo-alt-fill"></i> Distance: ${h.distance.toFixed(2)} km</span>
             </div>
         `;
         hotelList.appendChild(hotelItem);
     });
 }
 
+// Function to fetch hotels from the backend API
+function fetchHotels(query) {
+    // Make sure latitude and longitude are available
+    if (userLatitude === null || userLongitude === null) {
+        alert('Location data is not available.');
+        return;
+    }
+
+    const apiUrl = `/api/hotel/search?query=${encodeURIComponent(query)}&latitude=${userLatitude}&longitude=${userLongitude}`;
+
+    fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+            renderHotels(data);
+        })
+        .catch(error => {
+            console.error('Error fetching hotels:', error);
+        });
+}
+
+
 // Search functionality
 document.getElementById('search-input').addEventListener('input', function () {
     const query = this.value.toLowerCase();
-    const hotelList = document.getElementById('hotel-list');
 
     // Trigger search only when the input is at least 3 characters long
     if (query.length >= 3) {
-        const filteredHotels = hotels.filter(hotel => hotel.name.toLowerCase().includes(query));
-        renderHotels(filteredHotels);
-        hotelList.style.display = 'block';  // Show hotel list
+        fetchHotels(query);
     } else {
-        hotelList.style.display = 'none';  // Hide hotel list if less than 3 characters
+        document.getElementById('hotel-list').style.display = 'none';  // Hide hotel list if less than 3 characters
     }
 });
 
-// Initially hide hotel list
-document.getElementById('hotel-list').style.display = 'none';
+// Call the function to get the location on page load
+getLocation();
