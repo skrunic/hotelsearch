@@ -9,10 +9,14 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container text-center mt-5">
-        <h1 class="mb-4">HOTEL SEARCH APP</h1>
+    <div class="container text-center">
+        <h1 class="text-center mb-4">Hotel Search App</h1>
+
+        <!-- Separate elements for latitude and longitude -->
+        <p id="lat-display">Checking your coordinates...</p>
+
         <div class="content-container">
-            <div class="search-container mb-4">
+            <div class="search-container">
                 <div class="input-group">
                     <input type="text" class="form-control" id="search-input" placeholder="Search by hotel name...">
                     <span class="input-group-text" id="search-icon">
@@ -20,6 +24,7 @@
                     </span>
                 </div>
             </div>
+
             <div class="hotel-list" id="hotel-list">
                 <!-- Dynamic Hotel Items Will Be Added Here -->
             </div>
