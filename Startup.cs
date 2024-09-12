@@ -38,6 +38,8 @@ namespace Demo_HotelSearch
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             // Serve the HTML page
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
 
             if (env.IsDevelopment())
             {
