@@ -30,6 +30,7 @@ function getLocation() {
 function renderHotels(hotels) {
     const hotelList = document.getElementById('hotel-list');
     hotelList.innerHTML = ''; // Clear previous results
+    hotelList.style.display = 'block';
 
     if (hotels.length === 0) {
         hotelList.innerHTML = '<div class="alert alert-warning" role="alert">No hotels found to match the search string!</div>';
