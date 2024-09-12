@@ -22,11 +22,73 @@ namespace Demo_HotelSearch.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddHotel([FromBody] Hotel hotel)
+        public IActionResult AddHotel([FromBody] Hotel newHotel)
         {
-            hotels.Add(hotel);
+            var hotels = MockData.GetHotels();
+
+            // Check if the hotel already exists (by name and address)
+            var existingHotel = hotels.FirstOrDefault(h => h.Name == newHotel.Name && h.Address == newHotel.Address);
+            if (existingHotel != null)
+            {
+                return BadRequest("A hotel with the same name and address already exists.");
+            }
+
+            // Assign a new unique ID to the hotel
+            newHotel.ID = Guid.NewGuid();
+            hotels.Add(newHotel);
+
+            return Ok(newHotel);
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateHotel(Guid id, [FromBody] Hotel updatedHotel)
+        {
+            var hotels = MockData.GetHotels();
+            var hotel = hotels.FirstOrDefault(h => h.ID == id);
+
+            if (hotel == null)
+            {
+                return NotFound("Hotel not found.");
+            }
+
+            // Update hotel properties
+            hotel.Name = updatedHotel.Name;
+            hotel.Price = updatedHotel.Price;
+            hotel.Latitude = updatedHotel.Latitude;
+            hotel.Longitude = updatedHotel.Longitude;
+            hotel.Address = updatedHotel.Address;
+            hotel.Email = updatedHotel.Email;
+
             return Ok(hotel);
         }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteHotel(Guid id)
+        {
+            var hotels = MockData.GetHotels();
+            var hotel = hotels.FirstOrDefault(h => h.ID == id);
+
+            if (hotel == null)
+            {
+                return NotFound("Hotel not found.");
+            }
+
+            hotels.Remove(hotel);
+            return NoContent();
+        }
+
+
+        [HttpGet("{id}")]
+        public IActionResult GetHotelById(Guid id)
+        {
+            var hotel = MockData.GetHotels().FirstOrDefault(h => h.ID == id);
+            if (hotel == null)
+            {
+                return NotFound("Hotel not found.");
+            }
+            return Ok(hotel);
+        }
+
 
         [HttpGet("search")]
         public IActionResult SearchHotels(double latitude, double longitude, int page = 1, int pageSize = 10)
