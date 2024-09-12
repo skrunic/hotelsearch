@@ -1,0 +1,23 @@
+﻿# Ignore Visual Studio temporary files, build results, and
+# user-specific files
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Bb]in/
+[Oo]bj/
+.vscode/
+.vs/
+*.user
+*.suo
+*.log
+*.pdb
+*.cache
+*.ide
+*.dll
+*.exe
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# Other files and folders you don't want in your repository
