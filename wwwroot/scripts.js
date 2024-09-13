@@ -110,14 +110,30 @@ function fetchHotels(query) {
 document.getElementById('search-input').addEventListener('input', function () {
     const query = this.value.toLowerCase();
 
-    // Trigger search only when the input is at least 3 characters long
     if (query.length >= 3) {
         currentPage = 1; // Reset to page 1 whenever a new search is made
-        fetchHotels(query);
+        debouncedSearch(query); 
     } else {
-        document.getElementById('hotel-list').style.display = 'none';  // Hide hotel list if less than 3 characters
+        document.getElementById('hotel-list').style.display = 'none';
+        document.getElementById('paging-controls').innerHTML = '';
     }
 });
+
+// Simple debounce function to prevent excessive API calls
+function debounce(func, wait) {
+    let timeout;
+    return function (...args) {
+        const context = this;
+
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(context, args), wait);
+    };
+}
+
+// Debounced search function (delays API calls)
+const debouncedSearch = debounce(function (query) {
+    fetchHotels(query);
+}, 300);
 
 // Call the function to get the location on page load
 getLocation();
