@@ -1,4 +1,6 @@
-﻿let userLatitude = null;
+﻿let currentPage = 1;
+let totalPages = 1;
+let userLatitude = null;
 let userLongitude = null;
 
 // Function to get the user's current location
@@ -22,7 +24,6 @@ function getLocation() {
 
     function error() {
         latDisplay.textContent = 'Unable to retrieve your location.';
-        lonDisplay.textContent = '';
     }
 }
 
@@ -51,6 +52,32 @@ function renderHotels(hotels) {
     });
 }
 
+// Function to render paging controls
+function renderPagingControls() {
+    const pagingControls = document.getElementById('paging-controls');
+    pagingControls.innerHTML = ''; // Clear previous paging controls
+
+    for (let i = 1; i <= totalPages; i++) {
+        const pageItem = document.createElement('button');
+        pageItem.classList.add('btn', 'btn-outline-primary', 'm-1');
+
+        pageItem.textContent = i;
+
+        if (i === currentPage) {
+            pageItem.classList.remove('btn-outline-primary');
+            pageItem.classList.add('btn-primary');
+        }
+
+        pageItem.addEventListener('click', function () {
+            currentPage = i;
+            fetchHotels(document.getElementById('search-input').value);
+        });
+
+        pagingControls.appendChild(pageItem);
+    }
+}
+
+
 // Function to fetch hotels from the backend API
 function fetchHotels(query) {
     // Make sure latitude and longitude are available
@@ -59,18 +86,19 @@ function fetchHotels(query) {
         return;
     }
 
-    const apiUrl = `/api/hotel/search?query=${encodeURIComponent(query)}&latitude=${userLatitude}&longitude=${userLongitude}`;
+    const apiUrl = `/api/hotel/search?query=${encodeURIComponent(query)}&latitude=${userLatitude}&longitude=${userLongitude}&page=${currentPage}&pageSize=5`;
 
     fetch(apiUrl)
         .then(response => response.json())
         .then(data => {
-            renderHotels(data);
+            renderHotels(data.hotels);
+            totalPages = data.totalPages;
+            renderPagingControls();
         })
         .catch(error => {
             console.error('Error fetching hotels:', error);
         });
 }
-
 
 // Search functionality
 document.getElementById('search-input').addEventListener('input', function () {
@@ -78,6 +106,7 @@ document.getElementById('search-input').addEventListener('input', function () {
 
     // Trigger search only when the input is at least 3 characters long
     if (query.length >= 3) {
+        currentPage = 1; // Reset to page 1 whenever a new search is made
         fetchHotels(query);
     } else {
         document.getElementById('hotel-list').style.display = 'none';  // Hide hotel list if less than 3 characters
