@@ -20,9 +20,9 @@
 
 .hotel-list {
     width: 100%;
-    display: none; /* Initially hidden */
-    max-height: 300px; /* Set max-height for scrollable area */
-    overflow-y: auto; /* Enable vertical scrolling */
+    display: none;
+    max-height: 400px; 
+    overflow-y: auto;
     margin-top: 10px;
 }
 
