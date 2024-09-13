@@ -1,5 +1,6 @@
 ﻿using Demo_HotelSearch.Data;
 using Demo_HotelSearch.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -21,6 +22,7 @@ namespace Demo_HotelSearch.Controllers
             return Ok(hotels);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public IActionResult AddHotel([FromBody] Hotel newHotel)
         {
@@ -40,6 +42,7 @@ namespace Demo_HotelSearch.Controllers
             return Ok(newHotel);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public IActionResult UpdateHotel(Guid id, [FromBody] Hotel updatedHotel)
         {
@@ -62,6 +65,7 @@ namespace Demo_HotelSearch.Controllers
             return Ok(hotel);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public IActionResult DeleteHotel(Guid id)
         {
