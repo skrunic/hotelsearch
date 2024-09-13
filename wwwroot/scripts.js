@@ -19,7 +19,7 @@ function getLocation() {
         userLatitude = position.coords.latitude;
         userLongitude = position.coords.longitude;
 
-        latDisplay.textContent = `Current latitude: ${userLatitude.toFixed(4)}, ${userLongitude.toFixed(4)}`;
+        latDisplay.textContent = `Your coordinates: ${userLatitude.toFixed(4)}, ${userLongitude.toFixed(4)}`;
     }
 
     function error() {
