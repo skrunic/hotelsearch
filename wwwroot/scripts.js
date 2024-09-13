@@ -80,20 +80,26 @@ function renderPagingControls() {
 
 // Function to fetch hotels from the backend API
 function fetchHotels(query) {
-    // Make sure latitude and longitude are available
+    // Simple sanitation
+    const safeQuery = DOMPurify.sanitize(query);
+
     if (userLatitude === null || userLongitude === null) {
         alert('Location data is not available.');
         return;
     }
 
-    const apiUrl = `/api/hotel/search?query=${encodeURIComponent(query)}&latitude=${userLatitude}&longitude=${userLongitude}&page=${currentPage}&pageSize=5`;
+    const apiUrl = `/api/hotel/search?query=${encodeURIComponent(safeQuery)}&latitude=${userLatitude}&longitude=${userLongitude}&page=${currentPage}&pageSize=5`;
 
     fetch(apiUrl)
         .then(response => response.json())
         .then(data => {
-            renderHotels(data.hotels);
-            totalPages = data.totalPages;
-            renderPagingControls();
+            if (data && Array.isArray(data.hotels)) {
+                renderHotels(data.hotels);
+                totalPages = data.totalPages;
+                renderPagingControls();
+            } else {
+                console.error('Invalid response structure');
+            }
         })
         .catch(error => {
             console.error('Error fetching hotels:', error);
